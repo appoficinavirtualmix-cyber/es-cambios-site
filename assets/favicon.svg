@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ES Cambios">
-  <rect width="64" height="64" rx="14" fill="#061426"/>
-  <path d="M14 21h23c7 0 12 5 12 11s-5 11-12 11H21" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
-  <path d="M43 18l7 7-7 7M21 46l-7-7 7-7" fill="none" stroke="#f5c542" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="32" y="37" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">ES</text>
-</svg>
