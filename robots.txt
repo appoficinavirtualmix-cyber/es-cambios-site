@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://es-cambios.com.br/sitemap.xml
