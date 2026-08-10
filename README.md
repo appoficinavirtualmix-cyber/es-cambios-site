@@ -1,4 +1,4 @@
-# ES Cambios - sitio oficial
+﻿# ES Cambios - sitio oficial
 
 Sitio estatico para GitHub Pages y dominio personalizado `es-cambios.com.br`.
 
@@ -22,7 +22,7 @@ Sitio estatico para GitHub Pages y dominio personalizado `es-cambios.com.br`.
 
 ## Informacion empresarial
 
-- Razon social: MUUVIX TECNOLOGIA E SOLUCOES LOGISTICAS LTDA
-- CNPJ: 68.386.391/0001-68
+- Razon social: ES CAMBIOS SERVIÇOS DIGITAIS LTDA
+- CNPJ: 59.633.657/0001-39
 - Direccion empresarial: AV. ALBATROZ 548, FAZENDA RIO GRANDE, PR, CEP: 83.823-448
-- Correo de privacidad y soporte: muuvix.suporte@gmail.com
+- Correo de privacidad y soporte: casadecambios.ceo@gmail.com
