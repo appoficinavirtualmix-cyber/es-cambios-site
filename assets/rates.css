@@ -1,0 +1,893 @@
+.rates-page {
+  min-height: 100vh;
+  background: #020604;
+  color: #f8fbff;
+}
+
+.rates-header {
+  border-bottom-color: rgba(117, 225, 28, .28);
+  background: rgba(3, 9, 6, .97);
+}
+
+.rates-header .nav-links a[aria-current="page"] {
+  background: #162a11;
+  color: #b9ff63;
+}
+
+.rates-main {
+  width: min(1180px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 20px 0 46px;
+}
+
+.rates-poster {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(300px, .72fr) minmax(560px, 1.28fr);
+  grid-template-areas:
+    "ambassador rates"
+    "assurances assurances"
+    "disclaimer disclaimer";
+  border: 1px solid #74ce24;
+  border-radius: 8px;
+  background: #010302;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, .48), 0 0 34px rgba(109, 215, 28, .1);
+}
+
+.rates-poster::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-linear-gradient(115deg, rgba(255, 255, 255, .014) 0, rgba(255, 255, 255, .014) 1px, transparent 1px, transparent 8px);
+  pointer-events: none;
+}
+
+.poster-ambassador {
+  grid-area: ambassador;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(128, 234, 36, .35);
+  background: #010302;
+}
+
+.poster-brand {
+  min-height: 156px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 18px 10px;
+  text-align: left;
+}
+
+.poster-brand img {
+  width: 104px;
+  height: 104px;
+  flex: 0 0 auto;
+  border-radius: 22px;
+  box-shadow: 0 0 0 1px rgba(242, 197, 48, .52), 0 0 30px rgba(120, 218, 27, .18);
+}
+
+.poster-brand strong,
+.poster-brand span {
+  display: block;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.poster-brand strong {
+  color: #f4c837;
+  font-size: 1.48rem;
+  font-weight: 950;
+}
+
+.poster-brand span {
+  margin-top: 6px;
+  color: #f4f6f2;
+  font-size: .69rem;
+  font-weight: 800;
+}
+
+.presenter-stage {
+  position: relative;
+  min-height: 720px;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.presenter-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 86px;
+  background: linear-gradient(to bottom, transparent, #010302 78%);
+  pointer-events: none;
+}
+
+.presenter-image {
+  position: absolute;
+  inset: 0 0 0 50%;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% top;
+  transform: translateX(-50%);
+}
+
+.confidence-seal {
+  position: absolute;
+  left: 18px;
+  bottom: 24px;
+  z-index: 2;
+  width: 136px;
+  min-height: 145px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  border: 2px solid #d6a934;
+  border-radius: 8px 8px 40px 40px;
+  background: rgba(3, 10, 7, .94);
+  color: #fff;
+  padding: 12px;
+  box-shadow: 0 0 0 4px rgba(214, 169, 52, .13), 0 12px 32px rgba(0, 0, 0, .45);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.confidence-seal span {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 5px;
+  border: 1px solid #84e12f;
+  border-radius: 50%;
+  color: #8cf044;
+  font-size: 1.05rem;
+}
+
+.confidence-seal strong {
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.confidence-seal strong:nth-of-type(2) {
+  color: #8cf044;
+}
+
+.poster-support {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-top: 1px solid rgba(116, 206, 36, .34);
+  background: #07150b;
+  color: #fff;
+  padding: 12px 16px;
+  text-decoration: none;
+}
+
+.poster-support:hover,
+.poster-support:focus-visible {
+  background: #0c2111;
+  text-decoration: none;
+}
+
+.support-mark {
+  width: 37px;
+  height: 37px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #76db2a;
+  border-radius: 50%;
+  color: #9cf352;
+}
+
+.poster-support small,
+.poster-support strong {
+  display: block;
+}
+
+.poster-support small {
+  color: #f4c837;
+  font-size: .62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.poster-support strong {
+  margin-top: 2px;
+  font-size: .82rem;
+}
+
+.poster-rates {
+  grid-area: rates;
+  min-width: 0;
+  padding: 20px 18px 18px;
+  background: #030705;
+}
+
+.poster-kicker {
+  width: fit-content;
+  margin: 0 auto 10px;
+  border: 1px solid #b79d32;
+  border-radius: 999px;
+  background: #10170c;
+  color: #f2ca3c;
+  padding: 7px 19px;
+  box-shadow: inset 0 0 14px rgba(121, 221, 28, .13), 0 0 18px rgba(203, 176, 55, .1);
+  font-size: .76rem;
+  font-weight: 950;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.poster-kicker span {
+  color: #83ed34;
+}
+
+.poster-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 118px;
+  margin-bottom: 8px;
+}
+
+.poster-heading h1 {
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.poster-heading h1 span,
+.poster-heading h1 em {
+  display: block;
+  font-style: normal;
+  font-weight: 1000;
+  line-height: .84;
+}
+
+.poster-heading h1 span {
+  color: #f8fbff;
+  font-size: 4.35rem;
+  text-shadow: 0 4px 0 #4f5356, 0 8px 22px rgba(255, 255, 255, .12);
+}
+
+.poster-heading h1 em {
+  margin-top: 9px;
+  color: #78df23;
+  font-size: 3.25rem;
+  text-shadow: 0 3px 0 #245f0c, 0 0 22px rgba(112, 228, 30, .24);
+}
+
+.heading-arrows {
+  color: #78df23;
+  font-size: 1.7rem;
+  font-weight: 1000;
+  letter-spacing: 0;
+}
+
+.rates-toolbar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  padding: 8px 2px;
+}
+
+.rates-status {
+  margin: 0;
+  color: #9db09f;
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.rates-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.rate-action,
+.rates-error button {
+  min-height: 36px;
+  border: 1px solid #365d34;
+  border-radius: 7px;
+  background: #0d2113;
+  color: #eef6ef;
+  padding: 7px 11px;
+  font: inherit;
+  font-size: .73rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.rate-action span {
+  margin-right: 4px;
+  color: #92ee4b;
+  font-size: .98rem;
+}
+
+.rate-action.accent {
+  border-color: #d4ae32;
+  background: #e7bc35;
+  color: #091008;
+}
+
+.rate-action.accent span {
+  color: #091008;
+}
+
+.rate-action:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.rate-action.loading span {
+  display: inline-block;
+  animation: rates-spin .8s linear infinite;
+}
+
+.rates-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.public-rate-card {
+  min-width: 0;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #528c22;
+  border-radius: 8px;
+  background: #020604;
+  padding: 8px 11px;
+  box-shadow: inset 0 0 18px rgba(104, 213, 31, .045);
+}
+
+.rate-route {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.rate-country {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 43px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.rate-country small,
+.rate-country strong {
+  display: block;
+}
+
+.rate-country small {
+  color: #718174;
+  font-size: .52rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rate-country strong {
+  overflow: hidden;
+  color: #efc738;
+  font-size: .76rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rate-country.destination strong {
+  color: #f5f7f5;
+}
+
+.rate-flag {
+  width: 43px;
+  height: 29px;
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 4px 9px rgba(0, 0, 0, .4);
+}
+
+.rate-flag-fallback {
+  width: 43px;
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 950;
+  text-align: center;
+}
+
+.rate-arrow {
+  position: static;
+  margin: 0;
+  color: #73dc24;
+  font-size: 1.45rem;
+  font-weight: 1000;
+  text-align: center;
+  transform: none;
+}
+
+.rate-quote {
+  min-width: 116px;
+  border-left: 1px solid rgba(116, 217, 38, .38);
+  padding-left: 12px;
+  text-align: right;
+}
+
+.rate-quote small,
+.rate-quote strong,
+.rate-quote span {
+  display: block;
+}
+
+.rate-quote small {
+  color: #8b998e;
+  font-size: .5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.rate-quote strong {
+  margin-top: 1px;
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.rate-quote span {
+  margin-top: 4px;
+  color: #75d92b;
+  font-size: .52rem;
+  font-weight: 800;
+}
+
+.rate-skeleton {
+  min-height: 72px;
+  border: 1px solid #294527;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #071009 25%, #102516 50%, #071009 75%);
+  background-size: 220% 100%;
+  animation: rates-loading 1.35s ease-in-out infinite;
+}
+
+.rates-error {
+  margin: 0 0 10px;
+  border: 1px solid #a93b35;
+  border-radius: 8px;
+  background: #2a1113;
+  padding: 14px;
+}
+
+.rates-error strong,
+.rates-error span {
+  display: block;
+}
+
+.rates-error span {
+  margin-top: 3px;
+  color: #efc1bd;
+  font-size: .8rem;
+}
+
+.rates-error button {
+  margin-top: 10px;
+}
+
+.poster-assurances {
+  grid-area: assurances;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(116, 206, 36, .42);
+  background: #050c07;
+}
+
+.poster-assurances span {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-right: 1px solid rgba(255, 255, 255, .1);
+  padding: 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.poster-assurances span:last-child {
+  border-right: 0;
+}
+
+.poster-assurances b {
+  color: #e8bc36;
+  font-size: 1.6rem;
+}
+
+.poster-assurances strong {
+  color: #dff1e1;
+  font-size: .75rem;
+}
+
+.rates-disclaimer {
+  grid-area: disclaimer;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  background: #77da26;
+  color: #071005;
+  padding: 10px 16px;
+  font-size: .7rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.rates-disclaimer strong {
+  margin-right: 5px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.rates-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 14px;
+  border: 1px solid #d7e1db;
+  border-radius: 8px;
+  background: #fff;
+  color: #121a2a;
+  padding: 20px;
+}
+
+.rates-help h2 {
+  margin-bottom: 7px;
+  font-size: 1.25rem;
+}
+
+.rates-help p:last-child {
+  max-width: 690px;
+  margin: 0;
+  color: #5d6b7f;
+  font-size: .88rem;
+}
+
+.rates-toast {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 90;
+  max-width: min(360px, calc(100% - 32px));
+  border: 1px solid #72d42d;
+  border-radius: 7px;
+  background: #07150a;
+  color: #fff;
+  padding: 11px 14px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, .4);
+  font-size: .84rem;
+  font-weight: 800;
+}
+
+.rates-footer {
+  border-top: 1px solid #264629;
+  background: #030806;
+}
+
+@keyframes rates-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rates-loading {
+  to { background-position: -220% 0; }
+}
+
+@media (max-width: 940px) {
+  .rates-poster {
+    grid-template-columns: 270px minmax(0, 1fr);
+  }
+
+  .poster-brand {
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .poster-brand img {
+    width: 82px;
+    height: 82px;
+  }
+
+  .presenter-stage {
+    min-height: 680px;
+  }
+
+  .poster-heading h1 span {
+    font-size: 3.55rem;
+  }
+
+  .poster-heading h1 em {
+    font-size: 2.65rem;
+  }
+
+  .rate-country {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .rate-flag,
+  .rate-flag-fallback {
+    width: 34px;
+  }
+
+  .rate-flag {
+    height: 23px;
+  }
+}
+
+@media (max-width: 760px) {
+  .rates-header .nav {
+    min-height: 62px;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .rates-header .nav-links {
+    width: auto;
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  .rates-header .nav-links a {
+    min-height: 34px;
+    padding: 5px 7px;
+    font-size: .7rem;
+  }
+
+  .rates-main {
+    width: min(100% - 14px, 1180px);
+    padding-top: 8px;
+  }
+
+  .rates-poster {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "ambassador"
+      "rates"
+      "assurances"
+      "disclaimer";
+  }
+
+  .poster-ambassador {
+    min-height: 404px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(128, 234, 36, .35);
+  }
+
+  .poster-brand {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    min-height: 0;
+    align-items: center;
+    flex-direction: row;
+    gap: 9px;
+    padding: 0;
+    text-align: left;
+  }
+
+  .poster-brand img {
+    width: 68px;
+    height: 68px;
+    border-radius: 15px;
+  }
+
+  .poster-brand strong {
+    font-size: 1.06rem;
+  }
+
+  .poster-brand span {
+    font-size: .55rem;
+  }
+
+  .presenter-stage {
+    min-height: 342px;
+  }
+
+  .presenter-image {
+    width: 330px;
+    height: 495px;
+    inset: auto auto -52px -28px;
+    object-fit: contain;
+    transform: none;
+  }
+
+  .confidence-seal {
+    right: 13px;
+    bottom: 12px;
+    left: auto;
+    width: 114px;
+    min-height: 122px;
+    border-radius: 8px 8px 34px 34px;
+  }
+
+  .confidence-seal strong {
+    font-size: .7rem;
+  }
+
+  .poster-support {
+    min-height: 62px;
+    justify-content: flex-end;
+    padding-left: 190px;
+    text-align: left;
+  }
+
+  .poster-rates {
+    padding: 15px 10px 12px;
+  }
+
+  .poster-kicker {
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    font-size: .62rem;
+  }
+
+  .poster-heading {
+    min-height: 93px;
+    gap: 5px;
+  }
+
+  .poster-heading h1 span {
+    font-size: 3.15rem;
+  }
+
+  .poster-heading h1 em {
+    margin-top: 6px;
+    font-size: 2.35rem;
+  }
+
+  .heading-arrows {
+    font-size: 1.15rem;
+  }
+
+  .rates-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .rates-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .public-rate-card {
+    grid-template-columns: minmax(0, 1fr) 96px;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .rate-route {
+    grid-template-columns: minmax(0, 1fr) 17px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .rate-country {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .rate-flag,
+  .rate-flag-fallback {
+    width: 30px;
+  }
+
+  .rate-flag {
+    height: 20px;
+  }
+
+  .rate-country small,
+  .rate-quote small {
+    font-size: .46rem;
+  }
+
+  .rate-country strong {
+    font-size: .62rem;
+  }
+
+  .rate-arrow {
+    font-size: 1.05rem;
+  }
+
+  .rate-quote {
+    min-width: 0;
+    padding-left: 7px;
+  }
+
+  .rate-quote strong {
+    font-size: 1.42rem;
+  }
+
+  .rate-quote span {
+    font-size: .45rem;
+  }
+
+  .poster-assurances span {
+    min-height: 64px;
+    align-content: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 4px;
+  }
+
+  .poster-assurances b {
+    font-size: 1.2rem;
+  }
+
+  .poster-assurances strong {
+    font-size: .56rem;
+  }
+
+  .rates-help {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 390px) {
+  .rates-header .brand span {
+    display: none;
+  }
+
+  .poster-heading h1 span {
+    font-size: 2.7rem;
+  }
+
+  .poster-heading h1 em {
+    font-size: 2rem;
+  }
+
+  .presenter-image {
+    left: -46px;
+  }
+
+  .poster-support {
+    padding-left: 174px;
+  }
+
+  .rate-country strong {
+    font-size: .57rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rate-action.loading span,
+  .rate-skeleton {
+    animation: none;
+  }
+}

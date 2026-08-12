@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#050b16">
+  <meta name="theme-color" content="#030704">
   <title>Tasas del día | ES Cambios</title>
   <meta name="description" content="Consulta las rutas y tasas públicas vigentes de ES Cambios.">
   <link rel="canonical" href="https://es-cambios.com.br/tasas/">
@@ -15,8 +15,10 @@
   <meta property="og:image" content="https://es-cambios.com.br/assets/es-cambios-brand.png">
   <link rel="icon" href="/assets/es-cambios-app.webp" type="image/webp">
   <link rel="preload" href="/assets/es-cambios-app.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script src="/assets/rates.js" defer></script>
+  <link rel="preload" href="/assets/es-cambios-ambassador-v1.webp" as="image" type="image/webp">
+  <link rel="stylesheet" href="/assets/styles.css?v=20260812">
+  <link rel="stylesheet" href="/assets/rates.css?v=20260812a">
+  <script src="/assets/rates.js?v=20260812a" defer></script>
 </head>
 <body class="rates-page">
   <a class="skip-link" href="#tasas-publicas">Saltar a las tasas</a>
@@ -36,57 +38,83 @@
   </header>
 
   <main id="tasas-publicas" class="rates-main">
-    <section class="rates-board" aria-labelledby="rates-title">
-      <div class="rates-brand-lockup">
-        <img src="/assets/es-cambios-app.webp" alt="Logo de ES Cambios" width="94" height="94">
-        <div>
-          <p class="rates-kicker">ES Cambios Servicios Digitales</p>
-          <h1 id="rates-title">Tasas del día</h1>
-          <p class="rates-lead">Rutas públicas para tus próximas remesas.</p>
+    <section class="rates-poster" aria-labelledby="rates-title">
+      <aside class="poster-ambassador" aria-label="ES Cambios Servicios Digitales">
+        <div class="poster-brand">
+          <img src="/assets/es-cambios-app.webp" alt="Logo de ES Cambios" width="116" height="116">
+          <div>
+            <strong>ES Cambios</strong>
+            <span>Servicios Digitales</span>
+          </div>
         </div>
-      </div>
 
-      <div class="rates-toolbar" aria-label="Acciones de tasas">
-        <p id="rates-status" class="rates-status" role="status" aria-live="polite">Consultando tasas públicas...</p>
-        <div class="rates-actions">
-          <button id="refresh-rates" class="rate-action" type="button" aria-label="Actualizar tasas">
-            <span aria-hidden="true">↻</span>
-            Actualizar
-          </button>
-          <button id="share-rates" class="rate-action accent" type="button" aria-label="Compartir tasas" disabled>
-            <span aria-hidden="true">↗</span>
-            Compartir
-          </button>
+        <div class="presenter-stage">
+          <img class="presenter-image" src="/assets/es-cambios-ambassador-v1.webp" alt="Representante de ES Cambios señalando las tasas" width="899" height="1350">
+          <div class="confidence-seal" aria-label="Servicio rápido, seguro y confiable">
+            <span aria-hidden="true">✓</span>
+            <strong>Rápido</strong>
+            <strong>Seguro</strong>
+            <strong>Confiable</strong>
+          </div>
         </div>
-      </div>
 
-      <div id="rates-error" class="rates-error" hidden>
-        <strong>No pudimos consultar las tasas.</strong>
-        <span>Revisa tu conexión e inténtalo nuevamente.</span>
-        <button id="retry-rates" type="button">Reintentar</button>
-      </div>
+        <a class="poster-support" href="/soporte/">
+          <span class="support-mark" aria-hidden="true">✦</span>
+          <span><small>Atención personalizada</small><strong>Estamos para servirte</strong></span>
+        </a>
+      </aside>
 
-      <div id="rates-list" class="rates-list" aria-busy="true">
-        <div class="rate-skeleton" aria-hidden="true"></div>
-        <div class="rate-skeleton" aria-hidden="true"></div>
-        <div class="rate-skeleton" aria-hidden="true"></div>
-      </div>
-
-      <noscript>
-        <div class="rates-error">
-          <strong>Activa JavaScript para consultar las tasas.</strong>
-          <span>La cartelera obtiene las rutas públicas de forma segura y en tiempo real.</span>
+      <div class="poster-rates">
+        <p class="poster-kicker"><span aria-hidden="true">$</span> ES Cambios Servicios Digitales <span aria-hidden="true">$</span></p>
+        <div class="poster-heading">
+          <span class="heading-arrows" aria-hidden="true">»»</span>
+          <h1 id="rates-title"><span>Tasas</span><em>del día</em></h1>
+          <span class="heading-arrows reverse" aria-hidden="true">««</span>
         </div>
-      </noscript>
 
-      <div class="rates-trust" aria-label="Compromisos del servicio">
-        <span><b aria-hidden="true">✓</b> Tasas transparentes</span>
-        <span><b aria-hidden="true">⚡</b> Operaciones rápidas</span>
-        <span><b aria-hidden="true">◉</b> Soporte confiable</span>
+        <div class="rates-toolbar" aria-label="Acciones de tasas">
+          <p id="rates-status" class="rates-status" role="status" aria-live="polite">Consultando tasas públicas...</p>
+          <div class="rates-actions">
+            <button id="refresh-rates" class="rate-action" type="button" aria-label="Actualizar tasas">
+              <span aria-hidden="true">↻</span>
+              Actualizar
+            </button>
+            <button id="share-rates" class="rate-action accent" type="button" aria-label="Compartir tasas" disabled>
+              <span aria-hidden="true">↗</span>
+              Compartir
+            </button>
+          </div>
+        </div>
+
+        <div id="rates-error" class="rates-error" hidden>
+          <strong>No pudimos consultar las tasas.</strong>
+          <span>Revisa tu conexión e inténtalo nuevamente.</span>
+          <button id="retry-rates" type="button">Reintentar</button>
+        </div>
+
+        <div id="rates-list" class="rates-list" aria-busy="true">
+          <div class="rate-skeleton" aria-hidden="true"></div>
+          <div class="rate-skeleton" aria-hidden="true"></div>
+          <div class="rate-skeleton" aria-hidden="true"></div>
+        </div>
+
+        <noscript>
+          <div class="rates-error">
+            <strong>Activa JavaScript para consultar las tasas.</strong>
+            <span>La cartelera obtiene las rutas públicas de forma segura y en tiempo real.</span>
+          </div>
+        </noscript>
+      </div>
+
+      <div class="poster-assurances" aria-label="Compromisos del servicio">
+        <span><b aria-hidden="true">◇</b><strong>Mejores tasas</strong></span>
+        <span><b aria-hidden="true">◷</b><strong>Transacciones rápidas</strong></span>
+        <span><b aria-hidden="true">◉</b><strong>Soporte confiable</strong></span>
       </div>
 
       <p class="rates-disclaimer">
-        Tasas sujetas a cambios sin previo aviso. La cotización definitiva se confirma dentro de ES Cambios al iniciar la remesa.
+        <strong>Tasas sujetas a cambios sin previo aviso.</strong>
+        La cotización definitiva se confirma dentro de ES Cambios al iniciar la remesa.
       </p>
     </section>
 
