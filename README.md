@@ -5,6 +5,7 @@ Sitio institucional estático de ES Cambios, preparado para GitHub Pages y el do
 ## Rutas públicas
 
 - `/`
+- `/tasas/`
 - `/privacidad/`
 - `/privacidade/`
 - `/excluir-conta/`
@@ -33,6 +34,14 @@ No se debe publicar ni modificar DNS durante el desarrollo sin autorización exp
 - Política de privacidade: `https://es-cambios.com.br/privacidade/`
 - Eliminación de cuenta: `https://es-cambios.com.br/excluir-conta/`
 - Soporte: `https://es-cambios.com.br/soporte/`
+- Tasas públicas: `https://es-cambios.com.br/tasas/`
+
+## Android App Links
+
+La asociación oficial se publica en `/.well-known/assetlinks.json` para el package
+`com.eschangue.escambios` y su certificado release. Con la aplicación instalada,
+Android puede abrir `/tasas` directamente en la pantalla nativa; sin la aplicación,
+el usuario permanece en esta página web.
 
 ## Información empresarial
 

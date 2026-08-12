@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050b16">
+  <title>Tasas del día | ES Cambios</title>
+  <meta name="description" content="Consulta las rutas y tasas públicas vigentes de ES Cambios.">
+  <link rel="canonical" href="https://es-cambios.com.br/tasas/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_419">
+  <meta property="og:title" content="Tasas del día | ES Cambios">
+  <meta property="og:description" content="Consulta las rutas públicas actualizadas de ES Cambios.">
+  <meta property="og:url" content="https://es-cambios.com.br/tasas/">
+  <meta property="og:image" content="https://es-cambios.com.br/assets/es-cambios-brand.png">
+  <link rel="icon" href="/assets/es-cambios-app.webp" type="image/webp">
+  <link rel="preload" href="/assets/es-cambios-app.webp" as="image" type="image/webp">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/rates.js" defer></script>
+</head>
+<body class="rates-page">
+  <a class="skip-link" href="#tasas-publicas">Saltar a las tasas</a>
+
+  <header class="site-header rates-header">
+    <nav class="nav" aria-label="Navegación principal">
+      <a class="brand" href="/">
+        <img src="/assets/es-cambios-app.webp" alt="" width="42" height="42">
+        <span>ES Cambios</span>
+      </a>
+      <div class="nav-links">
+        <a href="/tasas/" aria-current="page">Tasas</a>
+        <a href="/soporte/">Soporte</a>
+        <a href="/privacidad/">Privacidad</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="tasas-publicas" class="rates-main">
+    <section class="rates-board" aria-labelledby="rates-title">
+      <div class="rates-brand-lockup">
+        <img src="/assets/es-cambios-app.webp" alt="Logo de ES Cambios" width="94" height="94">
+        <div>
+          <p class="rates-kicker">ES Cambios Servicios Digitales</p>
+          <h1 id="rates-title">Tasas del día</h1>
+          <p class="rates-lead">Rutas públicas para tus próximas remesas.</p>
+        </div>
+      </div>
+
+      <div class="rates-toolbar" aria-label="Acciones de tasas">
+        <p id="rates-status" class="rates-status" role="status" aria-live="polite">Consultando tasas públicas...</p>
+        <div class="rates-actions">
+          <button id="refresh-rates" class="rate-action" type="button" aria-label="Actualizar tasas">
+            <span aria-hidden="true">↻</span>
+            Actualizar
+          </button>
+          <button id="share-rates" class="rate-action accent" type="button" aria-label="Compartir tasas" disabled>
+            <span aria-hidden="true">↗</span>
+            Compartir
+          </button>
+        </div>
+      </div>
+
+      <div id="rates-error" class="rates-error" hidden>
+        <strong>No pudimos consultar las tasas.</strong>
+        <span>Revisa tu conexión e inténtalo nuevamente.</span>
+        <button id="retry-rates" type="button">Reintentar</button>
+      </div>
+
+      <div id="rates-list" class="rates-list" aria-busy="true">
+        <div class="rate-skeleton" aria-hidden="true"></div>
+        <div class="rate-skeleton" aria-hidden="true"></div>
+        <div class="rate-skeleton" aria-hidden="true"></div>
+      </div>
+
+      <noscript>
+        <div class="rates-error">
+          <strong>Activa JavaScript para consultar las tasas.</strong>
+          <span>La cartelera obtiene las rutas públicas de forma segura y en tiempo real.</span>
+        </div>
+      </noscript>
+
+      <div class="rates-trust" aria-label="Compromisos del servicio">
+        <span><b aria-hidden="true">✓</b> Tasas transparentes</span>
+        <span><b aria-hidden="true">⚡</b> Operaciones rápidas</span>
+        <span><b aria-hidden="true">◉</b> Soporte confiable</span>
+      </div>
+
+      <p class="rates-disclaimer">
+        Tasas sujetas a cambios sin previo aviso. La cotización definitiva se confirma dentro de ES Cambios al iniciar la remesa.
+      </p>
+    </section>
+
+    <section class="rates-help" aria-label="Ayuda y seguridad">
+      <div>
+        <p class="eyebrow">Canal oficial</p>
+        <h2>Consulta pública, operación protegida</h2>
+        <p>Esta página no solicita contraseñas, documentos ni datos bancarios. Las operaciones se realizan únicamente dentro de ES Cambios.</p>
+      </div>
+      <a class="button primary" href="/soporte/">Hablar con soporte</a>
+    </section>
+  </main>
+
+  <div id="rates-toast" class="rates-toast" role="status" aria-live="polite" hidden></div>
+
+  <footer class="site-footer rates-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="/assets/es-cambios-app.webp" alt="" width="38" height="38">
+          <strong>ES Cambios</strong>
+        </div>
+        <p>Canal público de ES CAMBIOS SERVIÇOS DIGITAIS LTDA.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Inicio</a>
+        <a href="/privacidad/">Privacidad</a>
+        <a href="/soporte/">Soporte</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
