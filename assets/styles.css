@@ -573,6 +573,7 @@ p {
 }
 
 .rates-brand-lockup {
+  min-height: 196px;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -581,12 +582,31 @@ p {
   background: #07152a;
 }
 
-.rates-brand-lockup img {
+.rates-board-logo {
   width: 94px;
   height: 94px;
   flex: 0 0 auto;
   border-radius: 20px;
   box-shadow: 0 0 0 1px rgba(245, 200, 66, .48), 0 10px 30px rgba(0, 0, 0, .35);
+}
+
+.rates-title-presentation {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rates-mini-presenter {
+  width: 112px;
+  height: 172px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.rates-title-copy {
+  min-width: 0;
 }
 
 .rates-kicker {
@@ -978,18 +998,27 @@ p {
   }
 
   .rates-brand-lockup {
+    min-height: 158px;
     gap: 12px;
     padding: 17px 15px;
   }
 
-  .rates-brand-lockup img {
-    width: 70px;
-    height: 70px;
-    border-radius: 15px;
+  .rates-board-logo {
+    display: none;
+  }
+
+  .rates-title-presentation {
+    width: 100%;
+    gap: 9px;
+  }
+
+  .rates-mini-presenter {
+    width: 82px;
+    height: 142px;
   }
 
   .rates-brand-lockup h1 {
-    font-size: clamp(1.82rem, 10vw, 3rem);
+    font-size: 2rem;
   }
 
   .rates-kicker {
