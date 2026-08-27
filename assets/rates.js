@@ -4,6 +4,9 @@
   const SUPABASE_URL = "https://mvfsjutobizebzptysoo.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1kPJMnFy1ctMd21jRwOe8Q_eOPt4i7W";
   const PUBLIC_RATES_URL = `${SUPABASE_URL}/rest/v1/rpc/get_public_exchange_rates_v1`;
+  const RATES_CACHE_KEY = "es-cambios-public-rates-v1";
+  const RATES_CACHE_TTL_MS = 60_000;
+  const MANUAL_REFRESH_COOLDOWN_MS = 10_000;
 
   const countryCatalog = {
     AR: { name: "Argentina", flag: "/assets/flags/ar.png" },
@@ -15,7 +18,7 @@
     VE: { name: "Venezuela", flag: "/assets/flags/ve.png" }
   };
 
-  const state = { routes: [], loading: false };
+  const state = { routes: [], loading: false, lastRequestAt: 0 };
   const list = document.querySelector("#rates-list");
   const status = document.querySelector("#rates-status");
   const error = document.querySelector("#rates-error");
@@ -24,9 +27,14 @@
   const shareButton = document.querySelector("#share-rates");
   const toast = document.querySelector("#rates-toast");
 
-  const rateFormatter = new Intl.NumberFormat("es-ES", {
+  const standardRateFormatter = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 3,
     maximumFractionDigits: 3
+  });
+
+  const smallRateFormatter = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
   });
 
   const timeFormatter = new Intl.DateTimeFormat("es-ES", {
@@ -45,7 +53,29 @@
     const rawRate = Number(route.rate);
     if (!Number.isFinite(rawRate) || rawRate <= 0) return "0,000";
     const value = route.display_rate_inverted ? 1 / rawRate : rawRate;
-    return rateFormatter.format(value);
+    return (value < 1 ? smallRateFormatter : standardRateFormatter).format(value);
+  }
+
+  function readCachedRates() {
+    try {
+      const cached = JSON.parse(window.localStorage.getItem(RATES_CACHE_KEY) || "null");
+      if (!cached || !Array.isArray(cached.routes) || !Number.isFinite(cached.savedAt)) return null;
+      if (Date.now() - cached.savedAt > RATES_CACHE_TTL_MS) return null;
+      return cached.routes;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveCachedRates(routes) {
+    try {
+      window.localStorage.setItem(
+        RATES_CACHE_KEY,
+        JSON.stringify({ savedAt: Date.now(), routes })
+      );
+    } catch {
+      // Public rates still work when private browsing blocks local storage.
+    }
   }
 
   function updatedLabel(route) {
@@ -134,8 +164,26 @@
     }
   }
 
-  async function loadRates() {
+  async function loadRates({ force = false } = {}) {
     if (state.loading) return;
+
+    const now = Date.now();
+    if (force && now - state.lastRequestAt < MANUAL_REFRESH_COOLDOWN_MS) {
+      showToast("Espera unos segundos antes de actualizar nuevamente");
+      return;
+    }
+
+    if (!force) {
+      const cachedRoutes = readCachedRates();
+      if (cachedRoutes && cachedRoutes.length > 0) {
+        state.routes = cachedRoutes;
+        renderRoutes(cachedRoutes);
+        status.textContent = `${cachedRoutes.length} ${cachedRoutes.length === 1 ? "ruta pública" : "rutas públicas"}`;
+        return;
+      }
+    }
+
+    state.lastRequestAt = now;
     setLoading(true);
 
     try {
@@ -150,6 +198,13 @@
         body: "{}"
       });
 
+      if (response.status === 429 || response.status === 420) {
+        const retryAfter = Number(response.headers.get("Retry-After") || 10);
+        const rateError = new Error("Public rates rate limit reached");
+        rateError.code = "RATE_LIMITED";
+        rateError.retryAfter = Number.isFinite(retryAfter) ? retryAfter : 10;
+        throw rateError;
+      }
       if (!response.ok) throw new Error(`Public rates request failed: ${response.status}`);
       const routes = await response.json();
       if (!Array.isArray(routes) || routes.length === 0) {
@@ -157,10 +212,17 @@
       }
 
       state.routes = routes;
+      saveCachedRates(routes);
       renderRoutes(routes);
       status.textContent = `${routes.length} ${routes.length === 1 ? "ruta pública" : "rutas públicas"}`;
     } catch (requestError) {
       console.error("Unable to load public rates", requestError);
+      if (requestError && requestError.code === "RATE_LIMITED") {
+        const seconds = Math.max(1, Math.ceil(requestError.retryAfter));
+        status.textContent = `Protección activa · intenta nuevamente en ${seconds} s`;
+        showToast("Demasiadas actualizaciones seguidas. Tus tasas guardadas siguen disponibles.");
+        return;
+      }
       if (state.routes.length === 0) {
         list.replaceChildren();
         list.setAttribute("aria-busy", "false");
@@ -212,8 +274,8 @@
     }
   }
 
-  refreshButton.addEventListener("click", loadRates);
-  retryButton.addEventListener("click", loadRates);
+  refreshButton.addEventListener("click", () => loadRates({ force: true }));
+  retryButton.addEventListener("click", () => loadRates({ force: true }));
   shareButton.addEventListener("click", shareRates);
   loadRates();
 })();
