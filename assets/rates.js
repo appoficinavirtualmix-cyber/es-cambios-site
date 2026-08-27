@@ -56,29 +56,62 @@
     return `Actualizada ${timeFormatter.format(date).replace(",", " ·")}`;
   }
 
+  function createElement(tagName, className, text) {
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function countryBlock(country, label, fallbackCode, isDestination = false) {
+    const wrapper = createElement(
+      "div",
+      `rate-country${isDestination ? " destination" : ""}`
+    );
+
+    if (country.flag) {
+      const flag = createElement("img", "rate-flag");
+      flag.src = country.flag;
+      flag.alt = "";
+      flag.width = 32;
+      flag.height = 22;
+      wrapper.appendChild(flag);
+    } else {
+      const fallback = createElement("span", "rate-flag-fallback", fallbackCode || "--");
+      fallback.setAttribute("aria-hidden", "true");
+      wrapper.appendChild(fallback);
+    }
+
+    const labels = createElement("span");
+    labels.append(
+      createElement("small", "", label),
+      createElement("strong", "", country.name)
+    );
+    wrapper.appendChild(labels);
+    return wrapper;
+  }
+
   function routeCard(route) {
     const origin = safeCountry(route.origin_country_code);
     const destination = safeCountry(route.destination_country_code);
-    const article = document.createElement("article");
-    article.className = "public-rate-card";
-    article.innerHTML = `
-      <div class="rate-route">
-        <div class="rate-country">
-          ${origin.flag ? `<img class="rate-flag" src="${origin.flag}" alt="" width="32" height="22">` : `<span class="rate-flag-fallback" aria-hidden="true">${route.origin_country_code}</span>`}
-          <span><small>Origen</small><strong>${origin.name}</strong></span>
-        </div>
-        <span class="rate-arrow" aria-hidden="true">→</span>
-        <div class="rate-country destination">
-          ${destination.flag ? `<img class="rate-flag" src="${destination.flag}" alt="" width="32" height="22">` : `<span class="rate-flag-fallback" aria-hidden="true">${route.destination_country_code}</span>`}
-          <span><small>Destino</small><strong>${destination.name}</strong></span>
-        </div>
-      </div>
-      <div class="rate-quote">
-        <small>Tasa publicada</small>
-        <strong>${displayRate(route)}</strong>
-        <span>${updatedLabel(route)}</span>
-      </div>
-    `;
+    const article = createElement("article", "public-rate-card");
+    const routeSummary = createElement("div", "rate-route");
+    const arrow = createElement("span", "rate-arrow", "→");
+    arrow.setAttribute("aria-hidden", "true");
+    routeSummary.append(
+      countryBlock(origin, "Origen", route.origin_country_code),
+      arrow,
+      countryBlock(destination, "Destino", route.destination_country_code, true)
+    );
+
+    const quote = createElement("div", "rate-quote");
+    quote.append(
+      createElement("small", "", "Tasa publicada"),
+      createElement("strong", "", displayRate(route)),
+      createElement("span", "", updatedLabel(route))
+    );
+
+    article.append(routeSummary, quote);
     return article;
   }
 

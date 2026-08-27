@@ -273,6 +273,61 @@ p {
   color: var(--white);
 }
 
+.button.google-play {
+  min-height: 58px;
+  gap: 11px;
+  border-color: rgba(126, 226, 181, .64);
+  background: var(--white);
+  color: var(--navy);
+  padding: 9px 16px 9px 11px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .24);
+}
+
+.button.google-play:hover,
+.button.google-play:focus-visible {
+  border-color: #8ce9bd;
+  background: #f3fff9;
+}
+
+.google-play-mark {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border: 1px solid #2bcf88;
+  border-radius: 7px;
+  background: var(--navy);
+}
+
+.google-play-mark::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 13px solid #49dc9d;
+  transform: translate(-40%, -50%);
+}
+
+.google-play-copy {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  line-height: 1.08;
+}
+
+.google-play-copy small {
+  color: var(--muted);
+  font-size: .66rem;
+  font-weight: 720;
+}
+
+.google-play-copy strong {
+  margin-top: 3px;
+  font-size: 1rem;
+}
+
 .button.light {
   border-color: var(--line);
   background: var(--white);
