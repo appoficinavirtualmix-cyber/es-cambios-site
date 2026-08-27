@@ -28,8 +28,8 @@
   const toast = document.querySelector("#rates-toast");
 
   const standardRateFormatter = new Intl.NumberFormat("es-ES", {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
 
   const smallRateFormatter = new Intl.NumberFormat("es-ES", {
@@ -51,9 +51,16 @@
 
   function displayRate(route) {
     const rawRate = Number(route.rate);
-    if (!Number.isFinite(rawRate) || rawRate <= 0) return "0,000";
-    const value = route.display_rate_inverted ? 1 / rawRate : rawRate;
-    return (value < 1 ? smallRateFormatter : standardRateFormatter).format(value);
+    const displayRateInverted = route.display_rate_inverted === true;
+    if (!Number.isFinite(rawRate) || rawRate <= 0) {
+      return (displayRateInverted ? standardRateFormatter : smallRateFormatter).format(0);
+    }
+    const value = displayRateInverted ? 1 / rawRate : rawRate;
+    return (
+      displayRateInverted || Math.abs(value) >= 0.1
+        ? standardRateFormatter
+        : smallRateFormatter
+    ).format(value);
   }
 
   function readCachedRates() {
