@@ -4,7 +4,7 @@
   const SUPABASE_URL = "https://mvfsjutobizebzptysoo.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1kPJMnFy1ctMd21jRwOe8Q_eOPt4i7W";
   const PUBLIC_RATES_URL = `${SUPABASE_URL}/rest/v1/rpc/get_public_exchange_rates_v1`;
-  const RATES_CACHE_KEY = "es-cambios-public-rates-v1";
+  const RATES_CACHE_KEY = "es-cambios-public-rates-v2";
   const RATES_CACHE_TTL_MS = 60_000;
   const MANUAL_REFRESH_COOLDOWN_MS = 10_000;
 
@@ -13,8 +13,10 @@
     BR: { name: "Brasil", flag: "/assets/flags/br.png" },
     CL: { name: "Chile", flag: "/assets/flags/cl.png" },
     CO: { name: "Colombia", flag: "/assets/flags/co.png" },
+    CU: { name: "Cuba", flag: "/assets/flags/cu.png" },
     MX: { name: "México", flag: "/assets/flags/mx.png" },
     PE: { name: "Perú", flag: "/assets/flags/pe.png" },
+    US: { name: "Estados Unidos", flag: "/assets/flags/us.png" },
     VE: { name: "Venezuela", flag: "/assets/flags/ve.png" }
   };
 
@@ -37,6 +39,11 @@
     maximumFractionDigits: 4
   });
 
+  const tierAmountFormatter = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+
   const timeFormatter = new Intl.DateTimeFormat("es-ES", {
     day: "2-digit",
     month: "2-digit",
@@ -49,9 +56,8 @@
     return countryCatalog[normalized] || { name: normalized || "País", flag: null };
   }
 
-  function displayRate(route) {
-    const rawRate = Number(route.rate);
-    const displayRateInverted = route.display_rate_inverted === true;
+  function displayRateValue(rate, displayRateInverted = false) {
+    const rawRate = Number(rate);
     if (!Number.isFinite(rawRate) || rawRate <= 0) {
       return (displayRateInverted ? standardRateFormatter : smallRateFormatter).format(0);
     }
@@ -61,6 +67,50 @@
         ? standardRateFormatter
         : smallRateFormatter
     ).format(value);
+  }
+
+  function displayRate(route) {
+    return displayRateValue(route.rate, route.display_rate_inverted === true);
+  }
+
+  function providerTiers(route) {
+    if (String(route.pricing_mode || "").toUpperCase() !== "PROVIDER_TIERS") return [];
+    if (!Array.isArray(route.provider_tiers)) return [];
+
+    return route.provider_tiers
+      .map((tier) => ({
+        position: Number(tier && tier.position),
+        minAmount: Number(tier && tier.min_amount),
+        maxAmount:
+          tier && tier.max_amount !== null && tier.max_amount !== undefined
+            ? Number(tier.max_amount)
+            : null,
+        publishedRate: Number(tier && tier.published_rate)
+      }))
+      .filter(
+        (tier) =>
+          Number.isFinite(tier.position) &&
+          Number.isFinite(tier.minAmount) &&
+          tier.minAmount >= 0 &&
+          (tier.maxAmount === null ||
+            (Number.isFinite(tier.maxAmount) && tier.maxAmount > tier.minAmount)) &&
+          Number.isFinite(tier.publishedRate) &&
+          tier.publishedRate > 0
+      )
+      .sort((left, right) => left.position - right.position)
+      .slice(0, 12);
+  }
+
+  function tierRangeLabel(tier, currencyCode) {
+    const currency = String(currencyCode || "").trim().toUpperCase();
+    const suffix = currency ? ` ${currency}` : "";
+    if (tier.minAmount <= 0 && tier.maxAmount !== null) {
+      return `< ${tierAmountFormatter.format(tier.maxAmount)}${suffix}`;
+    }
+    if (tier.maxAmount !== null) {
+      return `${tierAmountFormatter.format(tier.minAmount)} - < ${tierAmountFormatter.format(tier.maxAmount)}${suffix}`;
+    }
+    return `+ ${tierAmountFormatter.format(tier.minAmount)}${suffix}`;
   }
 
   function readCachedRates() {
@@ -141,12 +191,37 @@
       countryBlock(destination, "Destino", route.destination_country_code, true)
     );
 
-    const quote = createElement("div", "rate-quote");
-    quote.append(
-      createElement("small", "", "Tasa publicada"),
-      createElement("strong", "", displayRate(route)),
-      createElement("span", "", updatedLabel(route))
-    );
+    const tiers = providerTiers(route);
+    const quote = createElement("div", tiers.length > 0 ? "rate-quote rate-tier-quote" : "rate-quote");
+
+    if (tiers.length > 0) {
+      article.classList.add("tiered");
+      quote.appendChild(createElement("small", "", "Tasas por tramo"));
+      const tierList = createElement("div", "rate-tier-list");
+      tiers.forEach((tier) => {
+        const row = createElement("div", "rate-tier-row");
+        row.append(
+          createElement(
+            "span",
+            "rate-tier-range",
+            tierRangeLabel(tier, route.provider_tier_currency_code)
+          ),
+          createElement(
+            "strong",
+            "rate-tier-value",
+            displayRateValue(tier.publishedRate, route.display_rate_inverted === true)
+          )
+        );
+        tierList.appendChild(row);
+      });
+      quote.append(tierList, createElement("span", "rate-tier-updated", updatedLabel(route)));
+    } else {
+      quote.append(
+        createElement("small", "", "Tasa publicada"),
+        createElement("strong", "", displayRate(route)),
+        createElement("span", "", updatedLabel(route))
+      );
+    }
 
     article.append(routeSummary, quote);
     return article;
@@ -246,7 +321,20 @@
     const lines = state.routes.map((route) => {
       const origin = safeCountry(route.origin_country_code);
       const destination = safeCountry(route.destination_country_code);
-      return `${route.origin_country_code} ${origin.name} → ${route.destination_country_code} ${destination.name}: ${displayRate(route)}`;
+      const routeLabel = `${route.origin_country_code} ${origin.name} → ${route.destination_country_code} ${destination.name}`;
+      const tiers = providerTiers(route);
+      if (tiers.length === 0) return `${routeLabel}: ${displayRate(route)}`;
+
+      const tierText = tiers
+        .map(
+          (tier) =>
+            `${tierRangeLabel(tier, route.provider_tier_currency_code)} = ${displayRateValue(
+              tier.publishedRate,
+              route.display_rate_inverted === true
+            )}`
+        )
+        .join(" · ");
+      return `${routeLabel}: ${tierText}`;
     });
     return ["ES Cambios · Tasas del día", "", ...lines].join("\n");
   }

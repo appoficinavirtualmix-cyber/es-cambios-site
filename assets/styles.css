@@ -861,6 +861,57 @@ p {
   font-weight: 750;
 }
 
+.public-rate-card.tiered {
+  align-items: stretch;
+}
+
+.rate-tier-quote {
+  min-width: 210px;
+}
+
+.rate-tier-list {
+  display: grid;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.rate-tier-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(98, 224, 0, .34);
+  border-radius: 6px;
+  background: #07110d;
+  padding: 6px 8px;
+}
+
+.rate-tier-row .rate-tier-range,
+.rate-tier-row .rate-tier-value {
+  margin: 0;
+}
+
+.rate-tier-row .rate-tier-range {
+  overflow: hidden;
+  color: #aebdc9;
+  font-size: .7rem;
+  font-weight: 800;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rate-tier-row .rate-tier-value {
+  color: var(--white);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.rate-tier-quote .rate-tier-updated {
+  margin-top: 7px;
+}
+
 .rate-skeleton {
   min-height: 116px;
   border: 1px solid #20342c;
@@ -1108,6 +1159,15 @@ p {
 
   .rate-quote {
     min-width: 104px;
+  }
+
+  .rate-tier-quote {
+    min-width: 190px;
+  }
+
+  .rate-tier-row {
+    gap: 7px;
+    padding: 6px;
   }
 
   .rates-trust {
