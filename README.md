@@ -35,6 +35,7 @@ No se debe publicar ni modificar DNS durante el desarrollo sin autorización exp
 - Eliminación de cuenta: `https://es-cambios.com.br/excluir-conta/`
 - Soporte: `https://es-cambios.com.br/soporte/`
 - Tasas públicas: `https://es-cambios.com.br/tasas/`
+- Verificación segura de celular: `https://es-cambios.com.br/verificar-celular/`
 
 ## Android App Links
 

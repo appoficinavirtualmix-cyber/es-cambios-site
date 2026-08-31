@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07152a">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'self'; form-action 'none'; img-src 'self' data:; manifest-src 'self'; object-src 'none'; script-src 'self'; style-src 'self'; upgrade-insecure-requests">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Verificación segura | ES Cambios</title>
+  <link rel="canonical" href="https://es-cambios.com.br/verificar-celular/">
+  <link rel="icon" href="/assets/es-cambios-app.webp" type="image/webp">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/site-safety.js" defer></script>
+  <script src="/assets/phone-verification-link.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Navegación principal">
+      <a class="brand" href="/"><img src="/assets/es-cambios-app.webp" alt="" width="42" height="42"><span>ES Cambios</span></a>
+      <div class="nav-links"><a href="/privacidad/">Privacidad</a><a href="/soporte/">Soporte</a></div>
+    </nav>
+  </header>
+
+  <main class="verification-link">
+    <div class="container verification-link-shell">
+      <img class="verification-link-logo" src="/assets/es-cambios-app.webp" alt="Logo de ES Cambios" width="96" height="96">
+
+      <section id="verification-link-loading" aria-live="polite">
+        <p class="eyebrow">Verificación segura</p>
+        <h1>Preparando ES Cambios</h1>
+        <p>Estamos validando el enlace antes de abrir la aplicación.</p>
+      </section>
+
+      <section id="verification-link-valid" hidden aria-live="polite">
+        <p class="eyebrow">Verificación segura</p>
+        <h1>Continúa en la app oficial</h1>
+        <p>Abre ES Cambios para confirmar tu número de celular de forma protegida.</p>
+
+        <div class="verification-security-note">
+          <strong>Enlace protegido y de un solo uso</strong>
+          <span>Solo funciona con tu sesión y vence junto con el código en 2 horas.</span>
+        </div>
+
+        <div class="actions">
+          <a class="button primary" id="open-es-cambios-app" href="#">Abrir ES Cambios</a>
+          <a class="button light" href="https://play.google.com/store/apps/details?id=com.eschangue.escambios" rel="noopener noreferrer external">Ver en Google Play</a>
+        </div>
+      </section>
+
+      <section id="verification-link-invalid" hidden aria-live="assertive">
+        <p class="eyebrow">Enlace no válido</p>
+        <h1>No pudimos validar este enlace</h1>
+        <p>Puede estar incompleto o haber vencido. No descargues archivos ofrecidos por otras páginas.</p>
+        <div class="actions">
+          <a class="button primary" href="/">Volver al inicio</a>
+          <a class="button light" href="/soporte/">Ir a soporte</a>
+        </div>
+      </section>
+
+      <noscript>
+        <p>Abre este enlace con JavaScript habilitado o ingresa directamente a ES Cambios.</p>
+      </noscript>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><div class="footer-brand"><img src="/assets/es-cambios-app.webp" alt="" width="38" height="38"><strong>ES Cambios</strong></div></div>
+      <div class="footer-links"><a href="/privacidad/">Privacidad</a><a href="/privacidade/">Privacidade</a></div>
+    </div>
+  </footer>
+</body>
+</html>
