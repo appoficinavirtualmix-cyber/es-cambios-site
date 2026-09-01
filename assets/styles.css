@@ -328,6 +328,41 @@ p {
   font-size: 1rem;
 }
 
+.nav-links .nav-google-play {
+  width: auto;
+  min-height: 40px;
+  gap: 7px;
+  margin-left: 4px;
+  padding: 4px 9px 4px 5px;
+  white-space: nowrap;
+}
+
+.nav-google-play .google-play-mark {
+  width: 28px;
+  height: 28px;
+  flex-basis: 28px;
+  border-radius: 6px;
+}
+
+.nav-google-play .google-play-mark::before {
+  border-top-width: 6px;
+  border-bottom-width: 6px;
+  border-left-width: 10px;
+}
+
+.nav-google-play .google-play-copy {
+  line-height: 1;
+}
+
+.nav-google-play .google-play-copy small {
+  font-size: .56rem;
+}
+
+.nav-google-play .google-play-copy strong {
+  margin-top: 2px;
+  font-size: .78rem;
+}
+
 .button.light {
   border-color: var(--line);
   background: var(--white);
