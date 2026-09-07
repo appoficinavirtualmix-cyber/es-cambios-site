@@ -7,12 +7,12 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src https://mvfsjutobizebzptysoo.supabase.co; font-src 'self'; form-action 'none'; img-src 'self' data:; manifest-src 'self'; object-src 'none'; script-src 'self'; style-src 'self'; upgrade-insecure-requests">
   <title>Tasas del día | ES Cambios</title>
-  <meta name="description" content="Consulta las rutas y tasas públicas vigentes de ES Cambios.">
+  <meta name="description" content="Consulta la tasa BCV referencial, las rutas vigentes y calcula tu remesa con ES Cambios.">
   <link rel="canonical" href="https://es-cambios.com.br/tasas/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_419">
   <meta property="og:title" content="Tasas del día | ES Cambios">
-  <meta property="og:description" content="Consulta las rutas públicas actualizadas de ES Cambios.">
+  <meta property="og:description" content="Consulta la tasa BCV, las rutas públicas y calcula tu próxima remesa.">
   <meta property="og:url" content="https://es-cambios.com.br/tasas/">
   <meta property="og:image" content="https://es-cambios.com.br/assets/es-cambios-brand.png">
   <link rel="icon" href="/assets/es-cambios-app.webp" type="image/webp">
@@ -71,10 +71,79 @@
         </div>
       </div>
 
+      <div id="bcv-reference" class="bcv-reference" hidden>
+        <span class="bcv-reference-label">Tasa BCV referencial</span>
+        <strong id="bcv-rate">1 USD = Bs. --</strong>
+        <span>Referencia oficial para operaciones con Venezuela</span>
+      </div>
+
       <div id="rates-error" class="rates-error" hidden>
         <strong>No pudimos consultar las tasas.</strong>
         <span>Revisa tu conexión e inténtalo nuevamente.</span>
         <button id="retry-rates" type="button">Reintentar</button>
+      </div>
+
+      <section class="rates-calculator" aria-labelledby="calculator-title">
+        <div class="calculator-heading">
+          <div>
+            <p class="rates-kicker">Cotización pública</p>
+            <h2 id="calculator-title">Calculadora de remesas</h2>
+          </div>
+          <span id="calculator-route-status" class="calculator-route-status">Cargando rutas...</span>
+        </div>
+
+        <div class="calculator-route-grid">
+          <label class="calculator-field">
+            <span>País de origen</span>
+            <select id="calculator-origin" disabled>
+              <option value="">Selecciona el origen</option>
+            </select>
+          </label>
+          <span class="calculator-route-arrow" aria-hidden="true">→</span>
+          <label class="calculator-field">
+            <span>País de destino</span>
+            <select id="calculator-destination" disabled>
+              <option value="">Selecciona el destino</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="calculator-mode" role="group" aria-label="Calcular por">
+          <span>Calcular por</span>
+          <div class="calculator-segments">
+            <button id="calculator-send-mode" class="active" type="button" aria-pressed="true">Envías</button>
+            <button id="calculator-receive-mode" type="button" aria-pressed="false">Recibe</button>
+          </div>
+        </div>
+
+        <div class="calculator-amount-grid">
+          <label class="calculator-field calculator-amount-field">
+            <span id="calculator-input-label">Tú envías</span>
+            <span class="calculator-money-input">
+              <span id="calculator-input-currency">BRL</span>
+              <input id="calculator-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="calculator-message" disabled>
+            </span>
+          </label>
+
+          <div class="calculator-result" aria-live="polite">
+            <span id="calculator-output-label">El destinatario recibe</span>
+            <strong><span id="calculator-output-currency">VES</span> <span id="calculator-output">0,00</span></strong>
+            <small id="calculator-rate">Selecciona una ruta para calcular</small>
+          </div>
+        </div>
+
+        <p id="calculator-message" class="calculator-message">Ingresa un monto para obtener una cotización referencial.</p>
+        <a class="calculator-cta" href="https://play.google.com/store/apps/details?id=com.eschangue.escambios" target="_blank" rel="noopener noreferrer external" aria-label="Crear remesa en ES Cambios desde Google Play">
+          Crear Remesa
+          <span aria-hidden="true">→</span>
+        </a>
+      </section>
+
+      <div class="rates-list-heading">
+        <div>
+          <p class="rates-kicker">Cartelera pública</p>
+          <h2>Rutas disponibles</h2>
+        </div>
       </div>
 
       <div id="rates-list" class="rates-list" aria-busy="true">

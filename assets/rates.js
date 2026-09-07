@@ -20,7 +20,12 @@
     VE: { name: "Venezuela", flag: "/assets/flags/ve.png" }
   };
 
-  const state = { routes: [], loading: false, lastRequestAt: 0 };
+  const state = {
+    routes: [],
+    loading: false,
+    lastRequestAt: 0,
+    calculationMode: "send"
+  };
   const list = document.querySelector("#rates-list");
   const status = document.querySelector("#rates-status");
   const error = document.querySelector("#rates-error");
@@ -28,6 +33,21 @@
   const retryButton = document.querySelector("#retry-rates");
   const shareButton = document.querySelector("#share-rates");
   const toast = document.querySelector("#rates-toast");
+  const bcvReference = document.querySelector("#bcv-reference");
+  const bcvRate = document.querySelector("#bcv-rate");
+  const calculatorOrigin = document.querySelector("#calculator-origin");
+  const calculatorDestination = document.querySelector("#calculator-destination");
+  const calculatorRouteStatus = document.querySelector("#calculator-route-status");
+  const calculatorSendMode = document.querySelector("#calculator-send-mode");
+  const calculatorReceiveMode = document.querySelector("#calculator-receive-mode");
+  const calculatorInputLabel = document.querySelector("#calculator-input-label");
+  const calculatorInputCurrency = document.querySelector("#calculator-input-currency");
+  const calculatorAmount = document.querySelector("#calculator-amount");
+  const calculatorOutputLabel = document.querySelector("#calculator-output-label");
+  const calculatorOutputCurrency = document.querySelector("#calculator-output-currency");
+  const calculatorOutput = document.querySelector("#calculator-output");
+  const calculatorRate = document.querySelector("#calculator-rate");
+  const calculatorMessage = document.querySelector("#calculator-message");
 
   const standardRateFormatter = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 2,
@@ -41,6 +61,16 @@
 
   const tierAmountFormatter = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+
+  const moneyFormatter = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  const bcvFormatter = new Intl.NumberFormat("es-VE", {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
 
@@ -73,6 +103,40 @@
     return displayRateValue(route.rate, route.display_rate_inverted === true);
   }
 
+  function normalizeCode(value) {
+    return String(value || "").trim().toUpperCase();
+  }
+
+  function parseLocalizedAmount(value) {
+    const cleaned = String(value || "").trim().replace(/\s/g, "").replace(/[^0-9,.-]/g, "");
+    if (!cleaned || cleaned === "-" || cleaned.startsWith("-")) return null;
+
+    const lastComma = cleaned.lastIndexOf(",");
+    const lastDot = cleaned.lastIndexOf(".");
+    const separatorIndex = Math.max(lastComma, lastDot);
+    const hasBothSeparators = lastComma >= 0 && lastDot >= 0;
+    const trailingDigits = separatorIndex >= 0 ? cleaned.length - separatorIndex - 1 : 0;
+    const decimalIndex = hasBothSeparators || (separatorIndex >= 0 && trailingDigits !== 3)
+      ? separatorIndex
+      : -1;
+    let normalized;
+
+    if (decimalIndex >= 0) {
+      const integerPart = cleaned.slice(0, decimalIndex).replace(/[.,]/g, "");
+      const decimalPart = cleaned.slice(decimalIndex + 1).replace(/[.,]/g, "");
+      normalized = `${integerPart || "0"}.${decimalPart}`;
+    } else {
+      normalized = cleaned.replace(/[.,]/g, "");
+    }
+
+    const amount = Number(normalized);
+    return Number.isFinite(amount) && amount > 0 ? amount : null;
+  }
+
+  function roundMoney(value) {
+    return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  }
+
   function providerTiers(route) {
     if (String(route.pricing_mode || "").toUpperCase() !== "PROVIDER_TIERS") return [];
     if (!Array.isArray(route.provider_tiers)) return [];
@@ -99,6 +163,37 @@
       )
       .sort((left, right) => left.position - right.position)
       .slice(0, 12);
+  }
+
+  function tierContains(tier, amount) {
+    return amount >= tier.minAmount && (tier.maxAmount === null || amount < tier.maxAmount);
+  }
+
+  function resolveTierRate(route, inputAmount, mode) {
+    const tiers = providerTiers(route);
+    if (tiers.length === 0) return null;
+
+    return tiers.find((tier) => {
+      const sourceAmount = mode === "send" ? inputAmount : inputAmount / tier.publishedRate;
+      const destinationAmount = mode === "send" ? inputAmount * tier.publishedRate : inputAmount;
+      const basis = normalizeCode(route.provider_tier_basis);
+
+      if (basis === "SOURCE_AMOUNT") return tierContains(tier, sourceAmount);
+      if (basis === "DESTINATION_AMOUNT" || !basis) return tierContains(tier, destinationAmount);
+      if (basis === "USD_EQUIVALENT") {
+        if (normalizeCode(route.source_currency_code) === "USD") return tierContains(tier, sourceAmount);
+        if (normalizeCode(route.destination_currency_code) === "USD") return tierContains(tier, destinationAmount);
+      }
+      return false;
+    })?.publishedRate || null;
+  }
+
+  function resolveCalculationRate(route, inputAmount, mode) {
+    if (normalizeCode(route.pricing_mode) !== "PROVIDER_TIERS") {
+      const rate = Number(route.rate);
+      return Number.isFinite(rate) && rate > 0 ? rate : null;
+    }
+    return resolveTierRate(route, inputAmount, mode);
   }
 
   function tierRangeLabel(tier, currencyCode) {
@@ -227,11 +322,135 @@
     return article;
   }
 
+  function selectOption(value, label) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    return option;
+  }
+
+  function selectedCalculatorRoute() {
+    return state.routes.find(
+      (route) =>
+        normalizeCode(route.origin_country_code) === calculatorOrigin.value &&
+        normalizeCode(route.destination_country_code) === calculatorDestination.value
+    ) || null;
+  }
+
+  function renderBcvReference(routes) {
+    const occurrences = new Map();
+    routes.forEach((route) => {
+      const value = Number(route.bcv_rate);
+      if (!Number.isFinite(value) || value <= 0) return;
+      const key = value.toFixed(8);
+      const current = occurrences.get(key);
+      occurrences.set(key, { value, count: (current?.count || 0) + 1 });
+    });
+
+    const reference = [...occurrences.values()].sort((left, right) => right.count - left.count)[0];
+    if (!reference) {
+      bcvReference.hidden = true;
+      return;
+    }
+
+    bcvRate.textContent = `1 USD = Bs. ${bcvFormatter.format(reference.value)}`;
+    bcvReference.hidden = false;
+  }
+
+  function populateOriginOptions() {
+    const previousOrigin = calculatorOrigin.value;
+    const origins = [...new Set(state.routes.map((route) => normalizeCode(route.origin_country_code)))]
+      .filter(Boolean)
+      .sort((left, right) => safeCountry(left).name.localeCompare(safeCountry(right).name, "es"));
+
+    calculatorOrigin.replaceChildren();
+    origins.forEach((code) => calculatorOrigin.appendChild(selectOption(code, safeCountry(code).name)));
+    calculatorOrigin.value = origins.includes(previousOrigin)
+      ? previousOrigin
+      : origins.includes("BR")
+        ? "BR"
+        : origins[0] || "";
+    calculatorOrigin.disabled = origins.length === 0;
+  }
+
+  function populateDestinationOptions() {
+    const previousDestination = calculatorDestination.value;
+    const destinations = state.routes
+      .filter((route) => normalizeCode(route.origin_country_code) === calculatorOrigin.value)
+      .map((route) => normalizeCode(route.destination_country_code))
+      .filter(Boolean)
+      .sort((left, right) => safeCountry(left).name.localeCompare(safeCountry(right).name, "es"));
+
+    calculatorDestination.replaceChildren();
+    destinations.forEach((code) => calculatorDestination.appendChild(selectOption(code, safeCountry(code).name)));
+    calculatorDestination.value = destinations.includes(previousDestination)
+      ? previousDestination
+      : destinations.includes("VE")
+        ? "VE"
+        : destinations[0] || "";
+    calculatorDestination.disabled = destinations.length === 0;
+  }
+
+  function updateCalculator() {
+    const route = selectedCalculatorRoute();
+    const isSendMode = state.calculationMode === "send";
+    const sourceCurrency = normalizeCode(route?.source_currency_code) || "---";
+    const destinationCurrency = normalizeCode(route?.destination_currency_code) || "---";
+
+    calculatorSendMode.classList.toggle("active", isSendMode);
+    calculatorReceiveMode.classList.toggle("active", !isSendMode);
+    calculatorSendMode.setAttribute("aria-pressed", String(isSendMode));
+    calculatorReceiveMode.setAttribute("aria-pressed", String(!isSendMode));
+    calculatorInputLabel.textContent = isSendMode ? "Tú envías" : "El destinatario recibe";
+    calculatorOutputLabel.textContent = isSendMode ? "El destinatario recibe" : "Tú envías";
+    calculatorInputCurrency.textContent = isSendMode ? sourceCurrency : destinationCurrency;
+    calculatorOutputCurrency.textContent = isSendMode ? destinationCurrency : sourceCurrency;
+    calculatorAmount.disabled = !route;
+
+    if (!route) {
+      calculatorRouteStatus.textContent = "Ruta no disponible";
+      calculatorOutput.textContent = "0,00";
+      calculatorRate.textContent = "Selecciona una ruta para calcular";
+      calculatorMessage.textContent = "No hay una cotización pública para esta combinación.";
+      return;
+    }
+
+    calculatorRouteStatus.textContent = `${route.origin_country_code} → ${route.destination_country_code}`;
+    const inputAmount = parseLocalizedAmount(calculatorAmount.value);
+    if (!inputAmount) {
+      calculatorOutput.textContent = "0,00";
+      calculatorRate.textContent = `1 ${sourceCurrency} = ${displayRateValue(route.rate)} ${destinationCurrency}`;
+      calculatorMessage.textContent = "Ingresa un monto para obtener una cotización referencial.";
+      return;
+    }
+
+    const rate = resolveCalculationRate(route, inputAmount, state.calculationMode);
+    if (!rate) {
+      calculatorOutput.textContent = "--";
+      calculatorRate.textContent = "Cotización especial por tramos";
+      calculatorMessage.textContent = "Esta ruta requiere una referencia adicional. Consulta la cotización exacta dentro de ES Cambios.";
+      return;
+    }
+
+    const result = isSendMode ? roundMoney(inputAmount * rate) : roundMoney(inputAmount / rate);
+    calculatorOutput.textContent = moneyFormatter.format(result);
+    calculatorRate.textContent = `1 ${sourceCurrency} = ${displayRateValue(rate)} ${destinationCurrency}`;
+    calculatorMessage.textContent = "Cotización referencial. El valor definitivo se confirma en ES Cambios al iniciar la remesa.";
+  }
+
+  function initializeCalculator() {
+    populateOriginOptions();
+    populateDestinationOptions();
+    updateCalculator();
+  }
+
   function renderRoutes(routes) {
     list.replaceChildren();
     routes.forEach((route) => list.appendChild(routeCard(route)));
     list.setAttribute("aria-busy", "false");
     shareButton.disabled = routes.length === 0;
+    renderBcvReference(routes);
+    initializeCalculator();
   }
 
   function setLoading(isLoading) {
@@ -336,7 +555,8 @@
         .join(" · ");
       return `${routeLabel}: ${tierText}`;
     });
-    return ["ES Cambios · Tasas del día", "", ...lines].join("\n");
+    const bcvText = bcvReference.hidden ? [] : [bcvRate.textContent, ""];
+    return ["ES Cambios · Tasas del día", "", ...bcvText, ...lines].join("\n");
   }
 
   function showToast(message) {
@@ -372,5 +592,21 @@
   refreshButton.addEventListener("click", () => loadRates({ force: true }));
   retryButton.addEventListener("click", () => loadRates({ force: true }));
   shareButton.addEventListener("click", shareRates);
+  calculatorOrigin.addEventListener("change", () => {
+    populateDestinationOptions();
+    updateCalculator();
+  });
+  calculatorDestination.addEventListener("change", updateCalculator);
+  calculatorAmount.addEventListener("input", updateCalculator);
+  calculatorSendMode.addEventListener("click", () => {
+    state.calculationMode = "send";
+    updateCalculator();
+    calculatorAmount.focus();
+  });
+  calculatorReceiveMode.addEventListener("click", () => {
+    state.calculationMode = "receive";
+    updateCalculator();
+    calculatorAmount.focus();
+  });
   loadRates();
 })();
