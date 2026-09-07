@@ -83,7 +83,27 @@
         <button id="retry-rates" type="button">Reintentar</button>
       </div>
 
-      <section class="rates-calculator" aria-labelledby="calculator-title">
+      <div class="calculator-launch">
+        <button id="scroll-calculator" class="calculator-launch-button" type="button" aria-controls="remittance-calculator">
+          Calcular remesa
+          <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+
+      <div class="rates-list-heading">
+        <div>
+          <p class="rates-kicker">Cartelera pública</p>
+          <h2>Rutas disponibles</h2>
+        </div>
+      </div>
+
+      <div id="rates-list" class="rates-list" aria-busy="true">
+        <div class="rate-skeleton" aria-hidden="true"></div>
+        <div class="rate-skeleton" aria-hidden="true"></div>
+        <div class="rate-skeleton" aria-hidden="true"></div>
+      </div>
+
+      <section id="remittance-calculator" class="rates-calculator" aria-labelledby="calculator-title" tabindex="-1">
         <div class="calculator-heading">
           <div>
             <p class="rates-kicker">Cotización pública</p>
@@ -138,19 +158,6 @@
           <span aria-hidden="true">→</span>
         </a>
       </section>
-
-      <div class="rates-list-heading">
-        <div>
-          <p class="rates-kicker">Cartelera pública</p>
-          <h2>Rutas disponibles</h2>
-        </div>
-      </div>
-
-      <div id="rates-list" class="rates-list" aria-busy="true">
-        <div class="rate-skeleton" aria-hidden="true"></div>
-        <div class="rate-skeleton" aria-hidden="true"></div>
-        <div class="rate-skeleton" aria-hidden="true"></div>
-      </div>
 
       <noscript>
         <div class="rates-error">

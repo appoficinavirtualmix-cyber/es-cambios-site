@@ -48,6 +48,8 @@
   const calculatorOutput = document.querySelector("#calculator-output");
   const calculatorRate = document.querySelector("#calculator-rate");
   const calculatorMessage = document.querySelector("#calculator-message");
+  const calculatorSection = document.querySelector("#remittance-calculator");
+  const scrollCalculatorButton = document.querySelector("#scroll-calculator");
 
   const standardRateFormatter = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 2,
@@ -137,6 +139,24 @@
     return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   }
 
+  function roundToDecimals(value, decimals) {
+    const factor = 10 ** decimals;
+    return Math.round((Number(value) + Number.EPSILON) * factor) / factor;
+  }
+
+  function displayedRateMultiplier(rate, displayRateInverted = false) {
+    const configuredRate = Number(rate);
+    if (!Number.isFinite(configuredRate) || configuredRate <= 0) return null;
+
+    if (!displayRateInverted) {
+      return roundToDecimals(configuredRate, Math.abs(configuredRate) >= 0.1 ? 2 : 4);
+    }
+
+    const displayedSourceUnits = roundToDecimals(1 / configuredRate, 2);
+    if (displayedSourceUnits <= 0) return null;
+    return roundToDecimals(1 / displayedSourceUnits, 8);
+  }
+
   function providerTiers(route) {
     if (String(route.pricing_mode || "").toUpperCase() !== "PROVIDER_TIERS") return [];
     if (!Array.isArray(route.provider_tiers)) return [];
@@ -173,9 +193,14 @@
     const tiers = providerTiers(route);
     if (tiers.length === 0) return null;
 
-    return tiers.find((tier) => {
-      const sourceAmount = mode === "send" ? inputAmount : inputAmount / tier.publishedRate;
-      const destinationAmount = mode === "send" ? inputAmount * tier.publishedRate : inputAmount;
+    const matchingTier = tiers.find((tier) => {
+      const effectiveTierRate = displayedRateMultiplier(
+        tier.publishedRate,
+        route.display_rate_inverted === true
+      );
+      if (!effectiveTierRate) return false;
+      const sourceAmount = mode === "send" ? inputAmount : inputAmount / effectiveTierRate;
+      const destinationAmount = mode === "send" ? inputAmount * effectiveTierRate : inputAmount;
       const basis = normalizeCode(route.provider_tier_basis);
 
       if (basis === "SOURCE_AMOUNT") return tierContains(tier, sourceAmount);
@@ -185,13 +210,18 @@
         if (normalizeCode(route.destination_currency_code) === "USD") return tierContains(tier, destinationAmount);
       }
       return false;
-    })?.publishedRate || null;
+    });
+
+    if (!matchingTier) return null;
+    return displayedRateMultiplier(
+      matchingTier.publishedRate,
+      route.display_rate_inverted === true
+    );
   }
 
   function resolveCalculationRate(route, inputAmount, mode) {
     if (normalizeCode(route.pricing_mode) !== "PROVIDER_TIERS") {
-      const rate = Number(route.rate);
-      return Number.isFinite(rate) && rate > 0 ? rate : null;
+      return displayedRateMultiplier(route.rate, route.display_rate_inverted === true);
     }
     return resolveTierRate(route, inputAmount, mode);
   }
@@ -607,6 +637,14 @@
     state.calculationMode = "receive";
     updateCalculator();
     calculatorAmount.focus();
+  });
+  scrollCalculatorButton.addEventListener("click", () => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    calculatorSection.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "center"
+    });
+    window.setTimeout(() => calculatorAmount.focus({ preventScroll: true }), reducedMotion ? 0 : 500);
   });
   loadRates();
 })();
