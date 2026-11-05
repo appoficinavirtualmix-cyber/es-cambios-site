@@ -1,13 +1,17 @@
 [
   {
     "relation": [
-      "delegate_permission/common.handle_all_urls"
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
     ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.eschangue.escambios",
       "sha256_cert_fingerprints": [
-        "11:F0:F3:CD:C3:29:24:4C:83:A4:20:2A:79:85:2D:02:9B:31:1F:6E:9A:61:A6:47:E4:9F:B8:68:7E:40:51:B2"
+        "11:F0:F3:CD:C3:29:24:4C:83:A4:20:2A:79:85:2D:02:9B:31:1F:6E:9A:61:A6:47:E4:9F:B8:68:7E:40:51:B2",
+        "F6:A1:BE:3B:BB:66:6D:3C:25:8F:ED:FE:4C:D7:B5:5E:EF:AC:2E:BE:6D:37:3D:2C:FF:6E:80:57:8B:43:66:42",
+        "12:B4:5A:E0:FE:F7:63:04:CB:F6:15:2C:CB:59:D2:03:F6:7C:DD:D9:EE:E4:11:03:91:B4:2F:BF:63:1E:E9:81",
+        "53:0A:82:E5:D2:EE:04:25:DC:12:B0:CB:F0:0C:C5:3D:8F:60:0B:3E:7C:BD:51:3F:B0:BA:59:5B:ED:10:13:75"
       ]
     }
   }
